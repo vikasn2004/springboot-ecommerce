@@ -1,5 +1,6 @@
 package com.vikas.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vikas.ecommerce.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -10,6 +11,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -52,4 +54,8 @@ public class User {
     }
 
     boolean active=true;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    List<Order> orders;
 }
