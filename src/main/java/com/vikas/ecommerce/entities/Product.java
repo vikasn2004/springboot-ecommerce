@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name="products")
@@ -36,4 +37,7 @@ public class Product {
         createdAt = LocalDateTime.now();
     }
     boolean active=true;
+
+    @OneToMany(mappedBy = "product")
+    List<OrderItem> orderItem;
 }
