@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -31,6 +32,9 @@ public class Order {
     }
 
     boolean active=true;
+
+     @OneToMany(mappedBy = "order")
+     List<OrderItem> orderItems;
 
 
 }
