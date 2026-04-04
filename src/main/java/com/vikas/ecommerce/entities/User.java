@@ -37,6 +37,7 @@ public class User {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
             message = "Password must be 8+ chars, include uppercase, lowercase, number, and special character"
     )
+    @JsonIgnore
     @Column(nullable = false)
     String password;
 
