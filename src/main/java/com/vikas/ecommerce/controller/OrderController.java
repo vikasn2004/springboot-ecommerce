@@ -1,13 +1,14 @@
 package com.vikas.ecommerce.controller;
 
 import com.vikas.ecommerce.DTO.OrderRequestDTO;
+import com.vikas.ecommerce.DTO.OrderResponseDTO;
 import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,8 +17,13 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders")
-    public Order createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
+    public OrderResponseDTO createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
         return orderService.createOrder(orderRequestDTO);
+    }
+
+    @GetMapping("/orders/{userId}")
+    public List<OrderResponseDTO> getAllOrders(@PathVariable Long userId){
+        return orderService.getOrder(userId);
     }
 
 }
