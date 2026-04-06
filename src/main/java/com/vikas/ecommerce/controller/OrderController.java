@@ -6,24 +6,27 @@ import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ecommerce")
 public class OrderController {
     //inject order service
     private final OrderService orderService;
 
     @PostMapping("/orders")
-    public OrderResponseDTO createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
-        return orderService.createOrder(orderRequestDTO);
+    public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequestDTO));
     }
 
     @GetMapping("/orders/{userId}")
-    public List<OrderResponseDTO> getAllOrders(@PathVariable Long userId){
-        return orderService.getOrder(userId);
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders(@PathVariable Long userId){
+        return ResponseEntity.ok(orderService.getOrder(userId));
     }
 
 }

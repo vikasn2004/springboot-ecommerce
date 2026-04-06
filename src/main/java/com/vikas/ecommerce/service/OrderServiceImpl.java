@@ -31,10 +31,9 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     //inject product repo
     private final ProductRepository productRepository;
-    //inject orderitem repo
-    private final OrderItemRepository orderItemRepository;
 
-    private orderMapper ordermapper;
+
+    private final orderMapper ordermapper;
 
 
 
@@ -44,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     Order order=new Order();
     order.setUser(user);
     double totalPrice=0;
-    List<OrderItem> orderItemDTOS=new ArrayList<>();
+    List<OrderItem> orderItems=new ArrayList<>();
     for(OrderItemDTO items : orderRequestDTO.getItems()){
         Product product=productRepository.findById(items.getProductId()).orElseThrow(()->new RuntimeException("Product not found"));
         OrderItem item=new OrderItem();
@@ -54,9 +53,9 @@ public class OrderServiceImpl implements OrderService {
         item.setPrice(product.getPrice());
       double amount =product.getPrice()*item.getQuantity();
         totalPrice+=amount;
-        orderItemDTOS.add(item);
+        orderItems.add(item);
     }
-      order.setOrderItems(orderItemDTOS);
+      order.setOrderItems(orderItems);
       order.setTotalPrice(totalPrice);
       Order savedOrder=  orderRepository.save(order);
       return ordermapper.convertTODTO(savedOrder);
