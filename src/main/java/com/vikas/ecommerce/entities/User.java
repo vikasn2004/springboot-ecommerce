@@ -1,6 +1,7 @@
 package com.vikas.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vikas.ecommerce.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -37,7 +38,7 @@ public class User {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
             message = "Password must be 8+ chars, include uppercase, lowercase, number, and special character"
     )
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     String password;
 
