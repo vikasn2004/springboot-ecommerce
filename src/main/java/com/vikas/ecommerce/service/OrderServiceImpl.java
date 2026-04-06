@@ -14,7 +14,6 @@ import com.vikas.ecommerce.repository.ProductRepository;
 import com.vikas.ecommerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,27 +66,9 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public List<OrderResponseDTO> getOrder(Long userId) {
-        return orderRepository.findByUserId(userId)
-                .stream()
-                .map(order -> {
-                    OrderResponseDTO orderResponseDTO=new OrderResponseDTO();
-                    orderResponseDTO.setOrderId(order.getId());
-                    orderResponseDTO.setCreatedAt(order.getCreatedAt());
-                    orderResponseDTO.setTotalPrice(order.getTotalPrice());
+         List<Order> orders =orderRepository.findByUserId(userId);
+               return orders.stream().map(order -> ordermapper.convertTODTO(order))
+                       .toList();
 
-                    List<OrderItemDTO>  items = order.getOrderItems()
-                            .stream().map(
-                                    item->{
-                                        OrderItemDTO itemDTO=new OrderItemDTO();
-                                        itemDTO.setProductId(item.getProduct().getId());
-                                        itemDTO.setPrice(item.getProduct().getPrice());
-                                        itemDTO.setQuantity(item.getQuantity());
-                                        return itemDTO;
-                                    })
-                            .toList();
-                    orderResponseDTO.setOrderItems(items);
-                    return orderResponseDTO;
-                           } )
-                .toList();
     }
 }
