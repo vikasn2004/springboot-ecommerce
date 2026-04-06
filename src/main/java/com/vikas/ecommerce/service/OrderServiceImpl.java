@@ -34,7 +34,6 @@ public class OrderServiceImpl implements OrderService {
     //inject orderitem repo
     private final OrderItemRepository orderItemRepository;
 
-    @Autowired
     private orderMapper ordermapper;
 
 
@@ -44,25 +43,23 @@ public class OrderServiceImpl implements OrderService {
     User user=userRepository.findById(orderRequestDTO.getUserId()).orElseThrow(()->new RuntimeException("User not found"));
     Order order=new Order();
     order.setUser(user);
-    Order savedOrder=orderRepository.save(order);
     double totalPrice=0;
     List<OrderItem> orderItemDTOS=new ArrayList<>();
     for(OrderItemDTO items : orderRequestDTO.getItems()){
         Product product=productRepository.findById(items.getProductId()).orElseThrow(()->new RuntimeException("Product not found"));
         OrderItem item=new OrderItem();
         item.setProduct(product);
-        item.setOrder(savedOrder);
+        item.setOrder(order);
         item.setQuantity(items.getQuantity());
         item.setPrice(product.getPrice());
       double amount =product.getPrice()*item.getQuantity();
         totalPrice+=amount;
         orderItemDTOS.add(item);
     }
-     orderItemRepository.saveAll(orderItemDTOS);
-        savedOrder.setOrderItems(orderItemDTOS);
-        savedOrder.setTotalPrice(totalPrice);
-        orderRepository.save(savedOrder);
-    return ordermapper.convertTODTO(savedOrder);
+      order.setOrderItems(orderItemDTOS);
+      order.setTotalPrice(totalPrice);
+      Order savedOrder=  orderRepository.save(order);
+      return ordermapper.convertTODTO(savedOrder);
     }
     @Override
     public List<OrderResponseDTO> getOrder(Long userId) {

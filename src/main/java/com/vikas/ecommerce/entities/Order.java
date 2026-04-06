@@ -33,7 +33,7 @@ public class Order {
 
     boolean active=true;
 
-     @OneToMany(mappedBy = "order")
+     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
      List<OrderItem> orderItems;
 
 

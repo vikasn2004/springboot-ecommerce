@@ -13,6 +13,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        if(!product.isActive()){
+            throw new RuntimeException("Product is not active");
+        }
         return  productRepository.save(product) ;
     }
 
