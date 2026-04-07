@@ -7,14 +7,13 @@ import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.entities.OrderItem;
 import com.vikas.ecommerce.entities.Product;
 import com.vikas.ecommerce.entities.User;
+import com.vikas.ecommerce.exceptions.ResourceNotFoundExceptions;
 import com.vikas.ecommerce.mapper.orderMapper;
-import com.vikas.ecommerce.repository.OrderItemRepository;
 import com.vikas.ecommerce.repository.OrderRepository;
 import com.vikas.ecommerce.repository.ProductRepository;
 import com.vikas.ecommerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -38,14 +37,14 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
-    User user=userRepository.findById(orderRequestDTO.getUserId()).orElseThrow(()->new RuntimeException("User not found"));
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO)  {
+    User user=userRepository.findById(orderRequestDTO.getUserId()).orElseThrow(()->new ResourceNotFoundExceptions("User not found"));
     Order order=new Order();
     order.setUser(user);
     double totalPrice=0;
     List<OrderItem> orderItems=new ArrayList<>();
     for(OrderItemDTO items : orderRequestDTO.getItems()){
-        Product product=productRepository.findById(items.getProductId()).orElseThrow(()->new RuntimeException("Product not found"));
+        Product product=productRepository.findById(items.getProductId()).orElseThrow(()->new ResourceNotFoundExceptions("Product not found"));
         OrderItem item=new OrderItem();
         item.setProduct(product);
         item.setOrder(order);
