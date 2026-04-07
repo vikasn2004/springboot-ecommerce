@@ -18,7 +18,7 @@ public class LoadUserDetailsImple implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not fount"+ email));
+    User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found with "+ email));
 
     return new org.springframework.security.core.userdetails.User(
                                        user.getEmail(),

@@ -17,16 +17,16 @@ public class jwtUtil {
     @Value("${SecretKey}")
      String secretKey;
 
-    public  Key getKey() {
+    public  SecretKey getKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 *100 ))
-                .signWith(getKey() , SignatureAlgorithm.HS256)
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 *100 *10 ))
+                .signWith(getKey())
                 .compact();
     }
 
