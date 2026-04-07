@@ -1,6 +1,7 @@
 package com.vikas.ecommerce.service;
 
 import com.vikas.ecommerce.entities.Product;
+import com.vikas.ecommerce.exceptions.ResourceNotFoundExceptions;
 import com.vikas.ecommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product){
+
         if(!product.isActive()){
-            throw new RuntimeException("Product is not active");
+            throw new ResourceNotFoundExceptions("Product is not active");
         }
+
         return  productRepository.save(product) ;
     }
 
