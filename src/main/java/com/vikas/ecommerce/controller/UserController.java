@@ -8,14 +8,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +32,12 @@ public class UserController {
       User SavedUser=userService.createUser(user);
       String authToken=jwtutil.generateToken(SavedUser.getEmail());
      return ResponseEntity.status(HttpStatus.CREATED).body(authToken);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/promote/{email}")
+    public ResponseEntity<String> promoteToAdmin(@PathVariable String email){
+        userService.promote(email);
+        return ResponseEntity.ok("User " + email + " promoted to ADMIN");
     }
 
     @PostMapping("/user/login")

@@ -2,7 +2,7 @@ package com.vikas.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vikas.ecommerce.Roles;
+import com.vikas.ecommerce.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -47,7 +47,10 @@ public class User {
     String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    Roles role=Roles.USER;
+    @Column(name="role")
+    Role role=Role.USER;
+
+
 
     LocalDateTime createdAt;
     @PrePersist
