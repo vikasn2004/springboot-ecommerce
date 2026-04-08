@@ -20,15 +20,13 @@ public class UserServiceImpl implements UserService {
     private final jwtUtil jwtUtil;
 
     @Override
-    public String createUser(User user)  {
+    public User createUser(User user)  {
 
         if(userRepository.findByEmail(user.getEmail()).isPresent())
             throw new DuplicateEmailException("User already exists");
 
-        String email = user.getEmail();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+       return userRepository.save(user);
 
-        userRepository.save(user);
-        return  jwtUtil.generateToken(email);
     }
 }
