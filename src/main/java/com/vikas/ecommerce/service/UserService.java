@@ -4,4 +4,6 @@ import com.vikas.ecommerce.entities.User;
 
 public interface UserService {
     User createUser(User user) ;
+
+    void promote(String email);
 }
