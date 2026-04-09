@@ -1,11 +1,15 @@
 package com.vikas.ecommerce.controller;
 
+import com.vikas.ecommerce.DTO.AuthResponseDTO;
 import com.vikas.ecommerce.DTO.LoginRequestDTO;
+import com.vikas.ecommerce.DTO.RegisterRequestDTO;
+import com.vikas.ecommerce.DTO.RegisteredResponseDTO;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.service.UserService;
 import com.vikas.ecommerce.service.jwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,11 +31,15 @@ public class UserController {
     //inject jwt
     private final jwtUtil jwtutil;
 
+
     @PostMapping("/user/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody User user){
-      User SavedUser=userService.createUser(user);
-      String authToken=jwtutil.generateToken(SavedUser.getEmail());
-     return ResponseEntity.status(HttpStatus.CREATED).body(authToken);
+    public ResponseEntity<AuthResponseDTO> registerUser(@Valid @RequestBody RegisterRequestDTO registerRequestDTO) {
+     com.vikas.ecommerce.DTO.RegisteredResponseDTO registeredResponseDTO =userService.createUser(registerRequestDTO);
+      String authToken=jwtutil.generateToken(registeredResponseDTO.getEmail());
+        AuthResponseDTO authResponseDTO=new AuthResponseDTO();
+        authResponseDTO.setToken(authToken);
+        authResponseDTO.setRegisteredResponseDTO(registeredResponseDTO);
+     return ResponseEntity.status(HttpStatus.CREATED).body(authResponseDTO);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/promote/{email}")

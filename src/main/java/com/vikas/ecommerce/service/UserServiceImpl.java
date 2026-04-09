@@ -1,11 +1,14 @@
 package com.vikas.ecommerce.service;
 
+import com.vikas.ecommerce.DTO.RegisterRequestDTO;
+import com.vikas.ecommerce.DTO.RegisteredResponseDTO;
 import com.vikas.ecommerce.Role;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.exceptions.DuplicateEmailException;
 import com.vikas.ecommerce.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,22 +21,22 @@ public class UserServiceImpl implements UserService {
 
     //inject user repo
     private final UserRepository userRepository;
-
+    //inject password encoder
     private final PasswordEncoder passwordEncoder;
-
+     //inject jwt token
     private final jwtUtil jwtUtil;
+    //inject mapper
+    private final ModelMapper modelMapper;
 
     @Override
-    public User createUser(User user)  {
-
-        if(userRepository.findByEmail(user.getEmail()).isPresent())
+    public RegisteredResponseDTO createUser(RegisterRequestDTO registerRequestDTO)  {
+        if(userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent())
             throw new DuplicateEmailException("User already exists");
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-
-        return userRepository.save(user);
-
+        User user=modelMapper.map(registerRequestDTO,User.class);
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+      User savedUser=userRepository.save(user);
+       return modelMapper.map(savedUser,RegisteredResponseDTO.class);
     }
 
     @Override
