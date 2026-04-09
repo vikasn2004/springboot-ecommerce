@@ -23,10 +23,15 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequestDTO));
     }
+    @GetMapping("/orders/all")
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders(){
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
 
     @GetMapping("/orders/{userId}")
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders(@PathVariable Long userId){
         return ResponseEntity.ok(orderService.getOrder(userId));
     }
+
 
 }

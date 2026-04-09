@@ -25,11 +25,13 @@ public class SecurityConfig    {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                 .requestMatchers("/ecommerce/user/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/admin/promote/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/ecommerce/admin/promote/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST , "/ecommerce/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET , "/ecommerce/products/**" ).hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT , "/ecommerce/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ecommerce/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,  "/ecommerce/orders/all").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/ecommerce/orders/{userId}").hasAnyRole("ADMIN", "USER")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session

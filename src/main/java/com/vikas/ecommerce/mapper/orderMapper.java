@@ -19,6 +19,8 @@ public class orderMapper {
 
     public OrderResponseDTO convertTODTO(Order savedOrder) {
         OrderResponseDTO dto= modelMapper.map(savedOrder, OrderResponseDTO.class);
+        System.out.println("Order ID: " + savedOrder.getId());
+        System.out.println("OrderItems size from entity: " + savedOrder.getOrderItems().size());
         List<OrderItemDTO> items = savedOrder.getOrderItems()
                 .stream()
                 .map(item -> {
@@ -30,6 +32,7 @@ public class orderMapper {
                     return orderItemDTO;
                 })
                 .toList();
+        System.out.println("Items built: " + items.size());
       dto.setOrderItems(items);
       return dto;
     }
