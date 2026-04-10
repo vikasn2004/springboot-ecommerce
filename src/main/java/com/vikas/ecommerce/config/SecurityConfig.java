@@ -19,7 +19,6 @@ public class SecurityConfig    {
     private final jwtFilter jwtfilter;
 
     @Bean
-
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -31,7 +30,8 @@ public class SecurityConfig    {
                         .requestMatchers(HttpMethod.PUT , "/ecommerce/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ecommerce/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,  "/ecommerce/orders/all").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/ecommerce/orders/{userId}").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/ecommerce/orders").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/ecommerce/orders/{userId}").hasAnyRole("ADMIN", "USER")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session
