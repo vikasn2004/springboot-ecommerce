@@ -24,8 +24,8 @@ public class OrderItem {
     @Column(nullable = false)
     double price;
 
-   @ManyToOne
-   @JoinColumn(name="product_id")
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name="product_id" )
     Product product;
 
    @ManyToOne

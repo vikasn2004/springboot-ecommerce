@@ -25,7 +25,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
     }
 
-    @PreAuthorize("hasRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProduct(){
         return ResponseEntity.ok(productService.getAllProducts());

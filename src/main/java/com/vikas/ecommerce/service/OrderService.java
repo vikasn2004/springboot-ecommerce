@@ -13,4 +13,6 @@ public interface OrderService {
     OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) ;
 
      List<OrderResponseDTO> getAllOrders();
+
+    String cancelOrder(Long orderId);
 }
