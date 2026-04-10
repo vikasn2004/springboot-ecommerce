@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
     private final orderMapper ordermapper;
 
 
-
+    @Transactional
     @Override
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO)  {
     User user=userRepository.findById(orderRequestDTO.getUserId()).orElseThrow(()->new ResourceNotFoundExceptions("User not found"));
@@ -58,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
       Order savedOrder=  orderRepository.save(order);
       return ordermapper.convertTODTO(savedOrder);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public  List<OrderResponseDTO> getAllOrders() {
         return orderRepository.findAll()
@@ -67,6 +68,14 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String cancelOrder(Long orderId) {
+        Order order=orderRepository.findById(orderId).orElseThrow(()->new ResourceNotFoundExceptions("Order not found"));
+        orderRepository.delete(order);
+        return "Order has been deleted";
+    }
+
+    @Transactional( readOnly = true)
     @Override
     public List<OrderResponseDTO> getOrder(Long userId) {
          List<Order> orders =orderRepository.findByUserId(userId);

@@ -33,7 +33,7 @@ public class Order {
 
     boolean active=true;
 
-     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
      List<OrderItem> orderItems;
 
 

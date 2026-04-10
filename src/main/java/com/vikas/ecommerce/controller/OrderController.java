@@ -2,7 +2,6 @@ package com.vikas.ecommerce.controller;
 
 import com.vikas.ecommerce.DTO.OrderRequestDTO;
 import com.vikas.ecommerce.DTO.OrderResponseDTO;
-import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/orders")
+    @PreAuthorize("hasRole('ADMIN) or '@orderSecurityService.isOwner(authentication, #orderRequestDTO.userId)")
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO orderRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(orderRequestDTO));
     }
+
     @GetMapping("/orders/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders(){
@@ -31,9 +32,15 @@ public class OrderController {
     }
 
     @GetMapping("/orders/{userId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or @orderSecurityService.isOwner(authentication, #userId)")
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders(@PathVariable Long userId){
         return ResponseEntity.ok(orderService.getOrder(userId));
+    }
+    @DeleteMapping("/orders/{orderId}")
+    @PreAuthorize("hasRole('ADMIN') or @orderSecurityService.isOrderOwner(authentication, #orderId)")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long orderId){
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok("done deleted the recent order");
     }
 
 
