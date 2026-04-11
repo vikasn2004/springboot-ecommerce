@@ -24,6 +24,7 @@ public class SecurityConfig    {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                                 .requestMatchers("/ecommerce/user/**").permitAll()
+                        .requestMatchers("/swagger-ui/**" , "/v3/api-docs","/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/ecommerce/admin/promote/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST , "/ecommerce/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET , "/ecommerce/products/**" ).hasAnyRole("ADMIN", "USER")
