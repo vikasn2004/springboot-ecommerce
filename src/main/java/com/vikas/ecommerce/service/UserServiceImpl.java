@@ -6,14 +6,11 @@ import com.vikas.ecommerce.Role;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.exceptions.DuplicateEmailException;
 import com.vikas.ecommerce.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

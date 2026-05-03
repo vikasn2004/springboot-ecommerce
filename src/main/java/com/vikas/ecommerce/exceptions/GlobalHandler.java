@@ -1,15 +1,20 @@
 package com.vikas.ecommerce.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalHandler {
+
 
     @ExceptionHandler(ResourceNotFoundExceptions.class)
     public ResponseEntity<ApiError> handleResourceNotFoundException(ResourceNotFoundExceptions e){
@@ -42,11 +47,13 @@ public class GlobalHandler {
    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e){
-        ApiError apiError = new ApiError();
-        apiError.setMessage("something went wrong");
-        apiError.setStatus(500);
-        apiError.setTimestamp(LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiError);
+    public ResponseEntity<?> handleException(Exception e) {
+        e.printStackTrace();  // ← ADD THIS LINE
+        return ResponseEntity.status(500).body(Map.of(
+                "message", "something went wrong",
+                "status", 500,
+                "timestamp", LocalDateTime.now()
+        ));
     }
+
 }
