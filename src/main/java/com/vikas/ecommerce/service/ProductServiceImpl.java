@@ -18,7 +18,7 @@ public class ProductServiceImpl implements ProductService {
     public Product createProduct(Product product){
 
         if(!product.isActive()){
-            throw new ResourceNotFoundExceptions("Product is not active");
+            throw new IllegalArgumentException("Product is not active");
         }
 
         return  productRepository.save(product) ;

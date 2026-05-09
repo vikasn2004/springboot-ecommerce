@@ -5,11 +5,12 @@ import com.vikas.ecommerce.DTO.OrderRequestDTO;
 import com.vikas.ecommerce.DTO.OrderResponseDTO;
 import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.entities.OrderItem;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Slf4j
 @Component
 public class orderMapper {
     private final ModelMapper modelMapper ;
@@ -19,8 +20,7 @@ public class orderMapper {
 
     public OrderResponseDTO convertTODTO(Order savedOrder) {
         OrderResponseDTO dto= modelMapper.map(savedOrder, OrderResponseDTO.class);
-        System.out.println("Order ID: " + savedOrder.getId());
-        System.out.println("OrderItems size from entity: " + savedOrder.getOrderItems().size());
+        log.debug("Mapping order ID: {}, items: {}", savedOrder.getId(), savedOrder.getOrderItems().size());
         List<OrderItemDTO> items = savedOrder.getOrderItems()
                 .stream()
                 .map(item -> {
@@ -32,7 +32,6 @@ public class orderMapper {
                     return orderItemDTO;
                 })
                 .toList();
-        System.out.println("Items built: " + items.size());
       dto.setOrderItems(items);
       return dto;
     }

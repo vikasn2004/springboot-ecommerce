@@ -46,6 +46,14 @@ public class GlobalHandler {
         apiError.setTimestamp(LocalDateTime.now());
    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
     }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException e){
+        ApiError apiError = new ApiError();
+        apiError.setMessage(e.getMessage());
+        apiError.setStatus(400);
+        apiError.setTimestamp(LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         e.printStackTrace();  // ← ADD THIS LINE

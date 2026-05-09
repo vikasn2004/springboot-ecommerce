@@ -3,6 +3,7 @@ package com.vikas.ecommerce.service;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoadUserDetailsImple implements UserDetailsService {
@@ -20,7 +21,7 @@ public class LoadUserDetailsImple implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("user not found with "+ email));
-        System.out.println("Authority: ROLE_" + user.getRole().name());
+    log.debug("Loaded user: {} with role: {}", email, user.getRole().name());
     return new org.springframework.security.core.userdetails.User(
                                        user.getEmail(),
                                        user.getPassword(),

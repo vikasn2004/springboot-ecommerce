@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     //inject password encoder
     private final PasswordEncoder passwordEncoder;
-     //inject jwt token
-    private final jwtUtil jwtUtil;
     //inject mapper
     private final ModelMapper modelMapper;
 

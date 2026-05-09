@@ -10,7 +10,7 @@ public class KafkaTopic {
 
     @Bean
     public NewTopic ordersTopic() {
-        return TopicBuilder.name("order-paced")
+        return TopicBuilder.name("order-placed")
                 .partitions(3)
                 .replicas(1)
                 .build();

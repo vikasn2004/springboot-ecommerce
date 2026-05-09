@@ -73,8 +73,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public String cancelOrder(Long orderId) {
         Order order=orderRepository.findById(orderId).orElseThrow(()->new ResourceNotFoundExceptions("Order not found"));
-        orderRepository.delete(order);
-        return "Order has been deleted";
+        order.setActive(false);
+        orderRepository.save(order);
+        log.info("Order {} has been cancelled", orderId);
+        return "Order has been cancelled";
     }
 
     @Transactional( readOnly = true)
