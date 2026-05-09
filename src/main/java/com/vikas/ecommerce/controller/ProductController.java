@@ -4,6 +4,7 @@ import com.vikas.ecommerce.entities.Product;
 import com.vikas.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +28,8 @@ public class ProductController {
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProduct(){
-        return ResponseEntity.ok(productService.getAllProducts());
+    public ResponseEntity<Page<Product>> getAllProduct(){
+        return ResponseEntity.ok(productService.getAllProducts(0,10));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -36,8 +37,13 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable Long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/products/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
+    }
 
-    @PreAuthorize("hasRole('ADMIN')")
+        @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct){
         return ResponseEntity.ok(productService.updateProduct(id, updatedProduct));

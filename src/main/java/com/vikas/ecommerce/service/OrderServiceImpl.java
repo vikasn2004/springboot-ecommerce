@@ -46,6 +46,14 @@ public class OrderServiceImpl implements OrderService {
     List<OrderItem> orderItems=new ArrayList<>();
     for(OrderItemDTO items : orderRequestDTO.getItems()){
         Product product=productRepository.findById(items.getProductId()).orElseThrow(()->new ResourceNotFoundExceptions("Product not found"));
+        if(product.getStockQuantity()<items.getQuantity()){
+            throw new IllegalArgumentException(
+                    "Insufficient Stock Quantity " + product.getName()+
+                    " Stock left in ware " + product.getStockQuantity() +
+                            " stock required " + items.getQuantity()
+            );
+        }
+        product.setStockQuantity(product.getStockQuantity()-items.getQuantity());
         OrderItem item=new OrderItem();
         item.setProduct(product);
         item.setOrder(order);
@@ -58,6 +66,7 @@ public class OrderServiceImpl implements OrderService {
       order.setOrderItems(orderItems);
       order.setTotalPrice(totalPrice);
       Order savedOrder=  orderRepository.save(order);
+      log.info("Order created for user {} with id:{}",user.getId(),savedOrder.getId());
       orderEventProducer.publishOrderEvent(savedOrder.getId(),"PLACED");
       return ordermapper.convertTODTO(savedOrder);
     }
@@ -74,6 +83,11 @@ public class OrderServiceImpl implements OrderService {
     public String cancelOrder(Long orderId) {
         Order order=orderRepository.findById(orderId).orElseThrow(()->new ResourceNotFoundExceptions("Order not found"));
         order.setActive(false);
+        for(OrderItem item : order.getOrderItems()) {
+            Product product=new Product();
+            product.setStockQuantity(product.getStockQuantity()+item.getQuantity());
+            productRepository.save(product);
+        }
         orderRepository.save(order);
         log.info("Order {} has been cancelled", orderId);
         return "Order has been cancelled";

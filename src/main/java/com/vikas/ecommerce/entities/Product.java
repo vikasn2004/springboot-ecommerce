@@ -2,6 +2,7 @@ package com.vikas.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
@@ -44,7 +45,15 @@ public class Product {
     }
     boolean active=true;
 
+    @Min(value = 0, message = "Stock cannot be negative")
+    @Column(nullable = false)
+    Long stockQuantity = 0L;
+
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     List<OrderItem> orderItem;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="category_id")
+    Category category;
 }

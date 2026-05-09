@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,17 +65,19 @@ public class ProductServiceTest {
         product2.setDescription("Samsung Galaxy S26 Ultra");
         product2.setPrice(22000);
         product2.setActive(true);
-        when(productRepository.findAll()).thenReturn(List.of(product,product2));
-        List<Product> allProducts = productService.getAllProducts();
+        Page<Product> productPage = new PageImpl<>(List.of(product2,product));
+        when(productRepository.findAll(PageRequest.of(0,10))).thenReturn(productPage);
+        Page<Product> allProducts = productService.getAllProducts(0, 10);
         assertThat(allProducts).isNotNull();
-        assertThat(allProducts.size()).isEqualTo(2);
-        verify(productRepository,times(1)).findAll();
+        assertThat(allProducts.getContent()).hasSize(2);
+
 
     }
     @Test
     public void getAllProducts_ReturnEmptyList_WhenNoProductsFound() {
-        when(productRepository.findAll()).thenReturn(List.of());
-        List<Product> allProducts = productService.getAllProducts();
+        Page<Product> allProducts =new PageImpl<>(List.of());
+        when(productRepository.findAll(PageRequest.of(0,10))).thenReturn(allProducts);
+        Page<Product> allProduct = productService.getAllProducts(0,10);
         assertThat(allProducts).isEmpty();
     }
     @Test
