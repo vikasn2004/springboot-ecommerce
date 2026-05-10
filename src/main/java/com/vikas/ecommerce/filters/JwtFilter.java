@@ -1,7 +1,7 @@
 package com.vikas.ecommerce.filters;
 
-import com.vikas.ecommerce.service.LoadUserDetailsImple;
-import com.vikas.ecommerce.service.jwtUtil;
+import com.vikas.ecommerce.service.LoadUserDetailsImpl;
+import com.vikas.ecommerce.service.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,9 +16,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 @Component
 @RequiredArgsConstructor
-public class jwtFilter extends OncePerRequestFilter {
-    private final jwtUtil jwtUtil;
-    private final LoadUserDetailsImple loadUserDetailsImple;
+public class JwtFilter extends OncePerRequestFilter {
+    private final JwtUtil jwtUtil;
+    private final LoadUserDetailsImpl loadUserDetailsImple;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
        String authHeader = request.getHeader("Authorization");

@@ -11,6 +11,9 @@ services:
     depends_on:
        db:
          condition: service_healthy
+       kafka:
+          condition: service_started
+
 
   db:
     image: mysql:8.0

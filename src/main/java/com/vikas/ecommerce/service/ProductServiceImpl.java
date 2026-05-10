@@ -1,16 +1,21 @@
 package com.vikas.ecommerce.service;
 
+import com.vikas.ecommerce.DTO.ProductAddDTO;
+import com.vikas.ecommerce.DTO.ProductResponseDTO;
+import com.vikas.ecommerce.DTO.ProductUpdateDTO;
 import com.vikas.ecommerce.entities.Category;
 import com.vikas.ecommerce.entities.Product;
 import com.vikas.ecommerce.exceptions.ResourceNotFoundExceptions;
 import com.vikas.ecommerce.repository.CategoryRepository;
 import com.vikas.ecommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -20,46 +25,55 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     //inject the category repo
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     @Override
-    public Product createProduct(Product product){
+    public ProductResponseDTO createProduct(ProductAddDTO productAddDTO){
+        Product product = modelMapper.map(productAddDTO, Product.class);
 
         if(!product.isActive()){
             throw new IllegalArgumentException("Product is not active");
         }
         Category category=categoryRepository.findById(product.getCategory().getId()).orElseThrow(()->new ResourceNotFoundExceptions("Category not found"));
         product.setCategory(category);
-        return  productRepository.save(product) ;
+        Product saved= productRepository.save(product) ;
+        return modelMapper.map(saved, ProductResponseDTO.class);
     }
 
     @Override
-    public Page<Product> getAllProducts(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page,size));
+    public Page<ProductResponseDTO> getAllProducts(int page, int size) {
+        Page<Product> products= productRepository.findAll(PageRequest.of(page,size));
+        return products.map(product -> modelMapper.map(product, ProductResponseDTO.class));
     }
 
     @Override
-    public List<Product> getProductsByCategory(Long categoryId) {
+    public List<ProductResponseDTO> getProductsByCategory(Long categoryId) {
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundExceptions("Category not found"));
-        return productRepository.findByCategoryId(categoryId);
-    }
+        List<Product> found= productRepository.findByCategoryId(categoryId);
+
+        return found.stream()
+                .map(product -> modelMapper.map(product, ProductResponseDTO.class))
+                .collect(Collectors.toList());    }
 
     @Override
-    public Product getProductById(Long id) {
+    public ProductResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow( () -> new ResourceNotFoundExceptions("Product not found") );
-        return product;
+       return modelMapper.map(product, ProductResponseDTO.class);
     }
 
     @Override
-    public Product updateProduct(Long id,Product updatedProduct) {
-        Product product = productRepository.findById(id)
+    public ProductUpdateDTO updateProduct(Long id, ProductUpdateDTO productUpdateDTO) {
+           Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExceptions("Product not found"));
-        product.setName(updatedProduct.getName());
-        product.setPrice(updatedProduct.getPrice());
-        product.setDescription(updatedProduct.getDescription());
-        product.setActive(updatedProduct.isActive());
-        product.setBrand(updatedProduct.getBrand());
-        return productRepository.save(product);
+        Product productMapped=modelMapper.map(productUpdateDTO, Product.class);
+        product.setName(productMapped.getName());
+        product.setPrice(productMapped.getPrice());
+        product.setDescription(productMapped.getDescription());
+        product.setActive(productMapped.isActive());
+        product.setBrand(productMapped.getBrand());
+        Product saved= productRepository.save(product);
+        return modelMapper.map(saved, ProductUpdateDTO.class);
     }
 
     @Override

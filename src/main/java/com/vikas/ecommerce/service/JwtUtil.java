@@ -1,7 +1,6 @@
 package com.vikas.ecommerce.service;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,7 +10,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 
 @Service
-public class jwtUtil {
+public class JwtUtil {
 
     @Value("${SecretKey}")
      String secretKey;

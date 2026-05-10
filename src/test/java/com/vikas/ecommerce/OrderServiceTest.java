@@ -7,7 +7,7 @@ import com.vikas.ecommerce.entities.Order;
 import com.vikas.ecommerce.entities.Product;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.exceptions.ResourceNotFoundExceptions;
-import com.vikas.ecommerce.mapper.orderMapper;
+import com.vikas.ecommerce.mapper.OrderMapper;
 import com.vikas.ecommerce.repository.OrderRepository;
 import com.vikas.ecommerce.repository.ProductRepository;
 import com.vikas.ecommerce.repository.UserRepository;
@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class OrderServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private orderMapper orderMapper;
+    private OrderMapper orderMapper;
     @InjectMocks
     private OrderServiceImpl orderService;
     private User user;
@@ -169,11 +170,13 @@ public class OrderServiceTest {
     }
     @Test
     void cancelOrder_shouldDeleteOrder() {
+        order.setOrderItems(new ArrayList<>());
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        doNothing().when(orderRepository).delete(order);
+        when(orderRepository.save(any(Order.class))).thenReturn(order);
         String message=orderService.cancelOrder(1L);
-        assertThat(message).isEqualTo("Order has been deleted");
-        verify(orderRepository, times(1)).delete(order);
+        assertThat(message).isEqualTo("Order has been cancelled");
+        verify(orderRepository, times(1)).save(order);
+
     }
     @Test
     void cancelOrder_shouldThrowException_whenOrderNotFound() {

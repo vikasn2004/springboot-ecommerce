@@ -1,6 +1,8 @@
 package com.vikas.ecommerce.controller;
 
-import com.vikas.ecommerce.entities.Product;
+import com.vikas.ecommerce.DTO.ProductAddDTO;
+import com.vikas.ecommerce.DTO.ProductResponseDTO;
+import com.vikas.ecommerce.DTO.ProductUpdateDTO;
 import com.vikas.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,31 +24,31 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/products")
-    public ResponseEntity<Product> createProduct(@Valid @RequestBody Product product){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
+    public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductAddDTO productAddDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(productAddDTO));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping("/products")
-    public ResponseEntity<Page<Product>> getAllProduct(){
-        return ResponseEntity.ok(productService.getAllProducts(0,10));
+    public ResponseEntity<Page<ProductResponseDTO>> getAllProduct(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue="10") int size){
+        return ResponseEntity.ok(productService.getAllProducts(page,size));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id){
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/products/category/{categoryId}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
     }
 
         @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/products/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product updatedProduct){
-        return ResponseEntity.ok(productService.updateProduct(id, updatedProduct));
+    public ResponseEntity<ProductUpdateDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductUpdateDTO productUpdateDTO){
+        return ResponseEntity.ok(productService.updateProduct(id, productUpdateDTO));
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/products/{id}")

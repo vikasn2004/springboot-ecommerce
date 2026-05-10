@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoadUserDetailsImple implements UserDetailsService {
+public class LoadUserDetailsImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
 

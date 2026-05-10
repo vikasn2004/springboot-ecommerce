@@ -1,6 +1,6 @@
 package com.vikas.ecommerce.config;
 
-import com.vikas.ecommerce.filters.jwtFilter;
+import com.vikas.ecommerce.filters.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig    {
 
-    private final jwtFilter jwtfilter;
+    private final JwtFilter jwtfilter;
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {

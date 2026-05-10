@@ -1,10 +1,8 @@
 package com.vikas.ecommerce.mapper;
 
 import com.vikas.ecommerce.DTO.OrderItemDTO;
-import com.vikas.ecommerce.DTO.OrderRequestDTO;
 import com.vikas.ecommerce.DTO.OrderResponseDTO;
 import com.vikas.ecommerce.entities.Order;
-import com.vikas.ecommerce.entities.OrderItem;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -12,9 +10,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 @Slf4j
 @Component
-public class orderMapper {
+public class OrderMapper {
     private final ModelMapper modelMapper ;
-    public orderMapper(ModelMapper modelMapper) {
+    public OrderMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 

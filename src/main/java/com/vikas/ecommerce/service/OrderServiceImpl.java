@@ -9,7 +9,7 @@ import com.vikas.ecommerce.entities.Product;
 import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.exceptions.ResourceNotFoundExceptions;
 import com.vikas.ecommerce.kafka.OrderEventProducer;
-import com.vikas.ecommerce.mapper.orderMapper;
+import com.vikas.ecommerce.mapper.OrderMapper;
 import com.vikas.ecommerce.repository.OrderRepository;
 import com.vikas.ecommerce.repository.ProductRepository;
 import com.vikas.ecommerce.repository.UserRepository;
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     //inject product repo
     private final ProductRepository productRepository;
-    private final orderMapper ordermapper;
+    private final OrderMapper ordermapper;
      private final OrderEventProducer orderEventProducer;
 
     @Transactional
@@ -78,13 +78,13 @@ public class OrderServiceImpl implements OrderService {
                 .map(ordermapper::convertTODTO)
                 .collect(Collectors.toList());
     }
-
+    @Transactional
     @Override
     public String cancelOrder(Long orderId) {
         Order order=orderRepository.findById(orderId).orElseThrow(()->new ResourceNotFoundExceptions("Order not found"));
         order.setActive(false);
         for(OrderItem item : order.getOrderItems()) {
-            Product product=new Product();
+            Product product= item.getProduct();
             product.setStockQuantity(product.getStockQuantity()+item.getQuantity());
             productRepository.save(product);
         }

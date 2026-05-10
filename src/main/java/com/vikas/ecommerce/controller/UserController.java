@@ -3,13 +3,10 @@ package com.vikas.ecommerce.controller;
 import com.vikas.ecommerce.DTO.AuthResponseDTO;
 import com.vikas.ecommerce.DTO.LoginRequestDTO;
 import com.vikas.ecommerce.DTO.RegisterRequestDTO;
-import com.vikas.ecommerce.DTO.RegisteredResponseDTO;
-import com.vikas.ecommerce.entities.User;
 import com.vikas.ecommerce.service.UserService;
-import com.vikas.ecommerce.service.jwtUtil;
+import com.vikas.ecommerce.service.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,7 +26,7 @@ public class UserController {
    //inject authentication
     private final AuthenticationManager authenticationManager;
     //inject jwt
-    private final jwtUtil jwtutil;
+    private final JwtUtil jwtutil;
 
 
     @PostMapping("/user/register")
