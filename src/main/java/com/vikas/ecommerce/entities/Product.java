@@ -1,6 +1,7 @@
 package com.vikas.ecommerce.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,9 +54,10 @@ public class Product {
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
-    List<OrderItem> orderItem;
+    List<OrderItem> orderItems;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id")
+    @JsonIgnore
     Category category;
 }

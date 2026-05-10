@@ -1,5 +1,7 @@
 package com.vikas.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,6 +16,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Table(name = "order_item")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +30,10 @@ public class OrderItem {
 
    @ManyToOne(fetch = FetchType.LAZY)
    @JoinColumn(name="product_id" )
+
     Product product;
 
+   @JsonIgnore
    @ManyToOne
     @JoinColumn(name="order_id")
     Order order;
