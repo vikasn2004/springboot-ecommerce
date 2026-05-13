@@ -37,6 +37,7 @@ public class SecurityConfig    {
                         .requestMatchers(HttpMethod.POST, "/ecommerce/orders").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET,  "/ecommerce/orders/all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/ecommerce/orders/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST,"/ecommerce/help/**").hasAnyRole("ADMIN", "USER")
                         .anyRequest()
                         .authenticated())
                 .sessionManagement(session -> session

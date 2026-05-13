@@ -15,7 +15,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name="products")
+@Table(name="products",
+indexes = {
+        @Index(name="idx_products_category",columnList = "category_id"),
+        @Index(name="idx_product_active",columnList = "active")
+})
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter

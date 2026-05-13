@@ -15,7 +15,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
-@Table(name = "order_item")
+@Table(name = "order_item", indexes = {
+        @Index(name="idx_orderItem_orde",columnList = "order_id"),
+        @Index(name="idx_orderItem_product",columnList = "product_id")
+})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 
 public class OrderItem {

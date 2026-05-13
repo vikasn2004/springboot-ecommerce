@@ -12,7 +12,10 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
-@Table(name="orders")
+@Table(name="orders",indexes = {
+        @Index(name="idx_order_user",columnList = "user_id"),
+        @Index(name="idx_order_user",columnList = "active")
+})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
