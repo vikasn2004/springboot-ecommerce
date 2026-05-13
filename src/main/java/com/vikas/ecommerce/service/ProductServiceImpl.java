@@ -10,6 +10,7 @@ import com.vikas.ecommerce.repository.CategoryRepository;
 import com.vikas.ecommerce.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper;
 
     @Override
+    @CachePut(value = "products" , key = "#result.id")
     public ProductResponseDTO createProduct(ProductAddDTO productAddDTO){
         Product product = modelMapper.map(productAddDTO, Product.class);
 
@@ -41,12 +43,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cacheable(value = "products" , key = "#id")
     public Page<ProductResponseDTO> getAllProducts(int page, int size) {
         Page<Product> products= productRepository.findAll(PageRequest.of(page,size));
         return products.map(product -> modelMapper.map(product, ProductResponseDTO.class));
     }
 
     @Override
+    @Cacheable(value = "products-by-category" , key = "#categoryId")
     public List<ProductResponseDTO> getProductsByCategory(Long categoryId) {
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundExceptions("Category not found"));
@@ -57,12 +61,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());    }
 
     @Override
+    @Cacheable(value = "product" , key = "#productId")
     public ProductResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow( () -> new ResourceNotFoundExceptions("Product not found") );
        return modelMapper.map(product, ProductResponseDTO.class);
     }
 
     @Override
+    @CachePut(value = "products" , key = "#result.id")
     public ProductUpdateDTO updateProduct(Long id, ProductUpdateDTO productUpdateDTO) {
            Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundExceptions("Product not found"));
@@ -77,6 +83,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "product")
     public void deleteProduct(Long id) {
       productRepository.deleteById(id);
     }
