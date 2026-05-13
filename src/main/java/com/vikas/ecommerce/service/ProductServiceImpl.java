@@ -43,7 +43,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Cacheable(value = "products" , key = "#id")
     public Page<ProductResponseDTO> getAllProducts(int page, int size) {
         Page<Product> products= productRepository.findAll(PageRequest.of(page,size));
         return products.map(product -> modelMapper.map(product, ProductResponseDTO.class));
@@ -61,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());    }
 
     @Override
-    @Cacheable(value = "product" , key = "#productId")
+    @Cacheable(value = "product" , key = "#id")
     public ProductResponseDTO getProductById(Long id) {
         Product product = productRepository.findById(id).orElseThrow( () -> new ResourceNotFoundExceptions("Product not found") );
        return modelMapper.map(product, ProductResponseDTO.class);

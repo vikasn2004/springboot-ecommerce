@@ -8,10 +8,14 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/ecommerce
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      - REDIS_HOST=redis
+      - REDIS_PORT=6370
     depends_on:
        db:
          condition: service_healthy
        kafka:
+          condition: service_started
+       redis:
           condition: service_started
 
 
@@ -29,6 +33,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  redis:
+    image: alpine
+    ports :
+      - "6379:6379"
+
+
+
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
